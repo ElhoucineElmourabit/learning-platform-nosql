@@ -2,16 +2,16 @@
   "name": "learning-platform-template",
   "version": "1.0.0",
   "description": "Projet NoSQL, ENSET Mohammedia",
-  "main": "index.js",
+  "main": "src/app.js",
   "scripts": {
     "start": "nodemon ./src/app.js"
   },
   "keywords": [
     "MongoDB",
     "Redis",
-    "GLSID, II-BDCC, II-CCN"
+    "II-BDCC"
   ],
-  "author": "Abdelaziz DAAIF",
+  "author": "ELMOURABIT ELHOUCINE",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.7",
