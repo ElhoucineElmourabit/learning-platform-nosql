@@ -14,9 +14,15 @@ const requiredEnvVars = [
 
 // Validation des variables d'environnement
 function validateEnv() {
-  // TODO: Implémenter la validation
-  // Si une variable manque, lever une erreur explicative
+  requiredEnvVars.forEach((envVar) => {
+    if (!process.env[envVar]) {
+      throw new Error(`La variable d'environnement ${envVar} est manquante.`);
+    }
+  });
 }
+
+// Appel de la fonction de validation
+validateEnv();
 
 module.exports = {
   mongodb: {
