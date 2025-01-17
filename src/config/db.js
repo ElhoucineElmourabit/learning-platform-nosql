@@ -13,29 +13,31 @@ let mongoClient, redisClient, db;
 async function connectMongo() {
   // TODO: Implémenter la connexion MongoDB
   // Gérer les erreurs et les retries
-  mongoClient = new MongoClient(config.mongodb.uri);
-  
-  try{
-    await mongoClient.connect();
-
-    await listDatabases(mongoClient);
-  } catch(e){
-    console.error(e);
-  } finally{
-    await mongoClient.close();
+  if (!mongoClient) {
+    mongoClient = new MongoClient(config.mongodb.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    try {
+      await mongoClient.connect();
+      console.log('Connexion à MongoDB réussie.');
+    } catch (e) {
+      console.error('Erreur lors de la connexion à MongoDB :', e);
+      throw e;
+    }
   }
-
+  return mongoClient;
 }
 
-connectMongo().catch(console.error);
-
-async function listDatabases(mongoClient){
-  const databasesList = await mongoClient.db().admin().listDatabases();
-
-  console.log("Databases: ");
-  databasesList.databases.forEach(db => {
-    console.log(` ${db.name}`);
-  });
+// Fonction pour se déconnecter de MongoDB
+async function disconnectMongo() {
+  try {
+    if (mongoClient) {
+      await mongoClient.close(); // Fermeture propre de la connexion
+      console.log('Déconnexion de MongoDB réussie.');
+    } else {
+      console.log('Aucune connexion MongoDB active à fermer.');
+    }
+  } catch (e) {
+    console.error('Erreur lors de la déconnexion de MongoDB :', e);
+  }
 }
 
 async function connectRedis() {
@@ -46,5 +48,6 @@ async function connectRedis() {
 // Export des fonctions et clients
 module.exports = {
   // TODO: Exporter les clients et fonctions utiles
-  connectMongo
+  connectMongo,
+  disconnectMongo
 };
