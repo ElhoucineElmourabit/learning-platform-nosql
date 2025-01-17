@@ -2,7 +2,7 @@
 // Réponse: 
 
 const { ObjectId } = require('mongodb');
-const { db } = require("../config/db");
+const { connectMongo } = require("../config/db");
 
 // Fonctions utilitaires pour MongoDB
 async function findOneById(collection, id) {
@@ -75,6 +75,22 @@ async function deleteOne(collectionName, query) {
   }
 }
 
+// Fonction spécifique pour récupérer des statistiques sur les cours
+async function getCourseStats() {
+  try {
+      const client = await connectMongo();
+      const collection = client.db().collection('Courses');
+
+      const stats = await collection.aggregate([
+          { $group: { _id: "$category", total: { $sum: 1 } } },
+          { $sort: { total: -1 } }
+      ]).toArray();
+
+      return stats;
+  } catch (e) {
+      console.error('Erreur lors de la récupération des statistiques des cours :', e);
+  }
+}
 
 // Export des services
 module.exports = {
