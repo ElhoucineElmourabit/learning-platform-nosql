@@ -43,11 +43,38 @@ async function disconnectMongo() {
 async function connectRedis() {
   // TODO: Implémenter la connexion Redis
   // Gérer les erreurs et les retries
+  if (!redisClient) {
+    redisClient = redis.createClient({ url: process.env.REDIS_URI });
+    redisClient.on('error', (err) => console.error('Erreur Redis :', err));
+    try {
+      await redisClient.connect();
+      console.log('Connexion à Redis réussie.');
+    } catch (e) {
+      console.error('Erreur lors de la connexion à Redis :', e);
+      throw e;
+    }
+  }
+  return redisClient;
+}
+
+async function disconnectRedis() {
+  if (redisClient) {
+    try {
+      await redisClient.quit();
+      console.log('Déconnexion de Redis réussie.');
+    } catch (e) {
+      console.error('Erreur lors de la déconnexion de Redis :', e);
+    } finally {
+      redisClient = null;
+    }
+  }
 }
 
 // Export des fonctions et clients
 module.exports = {
   // TODO: Exporter les clients et fonctions utiles
   connectMongo,
-  disconnectMongo
+  disconnectMongo,
+  connectRedis,
+  disconnectRedis
 };
