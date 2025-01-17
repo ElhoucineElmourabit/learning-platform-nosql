@@ -14,7 +14,7 @@ async function connectMongo() {
   // TODO: Implémenter la connexion MongoDB
   // Gérer les erreurs et les retries
   if (!mongoClient) {
-    mongoClient = new MongoClient(config.mongodb.uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    mongoClient = new MongoClient(config.mongodb.uri);
     try {
       await mongoClient.connect();
       console.log('Connexion à MongoDB réussie.');
